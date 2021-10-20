@@ -2,8 +2,16 @@
 date_default_timezone_get("Europe/Bratislava");
 	include'js/hlavicka.php';
 	include'js/navbar.php';
-	include'prihlasenie.php';
 
+    session_start();
+    if(!(isset($_SESSION['check']))){
+        unset($_SESSION["user"]);
+    }
+    if(isset($_SESSION['user'])){
+        header('Location: prihlasenie.php');
+    }
+    else{
+    }
 ?>
 
 <?php 
@@ -22,7 +30,11 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         {
             ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
- <strong>Identita "<?php echo $uzivatelS; ?>" potvrdená</strong> <?php echo $chyba; ?>
+ <strong>Identita "<?php echo $uzivatelS; ?>" potvrdená</strong> <?php echo $chyba; 
+
+ $_SESSION['user'] = 'admin';
+ header('Location: prihlasenie.php');?>
+
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -102,6 +114,11 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                                     Prihlásiť sa
                                 </button>
                             </div>
+                            <?php
+                            if (isset($_POST["remember"])){
+                                $_SESSION['check'] = 'true';
+                            }
+                            ?>
                     </div>
                     </form>
                 </div>
