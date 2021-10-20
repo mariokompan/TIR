@@ -21,25 +21,28 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
      $uzivatelia = file('uzivatelia.csv', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
      $prihlasenie = [];
+     $names = [];
+
         foreach ($uzivatelia as $uzivatel) {
-            list($k,$h) = explode('::', $uzivatel);
+            list($k,$h,$z) = explode('::', $uzivatel);
             $prihlasenie[$k] = $h;
+            $names[$k] = $z;
                    }
 	$uzivatelS = $_POST['email-address'];
         if($_POST['password'] === $prihlasenie[$_POST['email-address']])
         {
-            ?>
+        ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
- <strong>Identita "<?php echo $uzivatelS; ?>" potvrdená</strong> <?php echo $chyba; 
+            <strong>Identita "<?php echo $uzivatelS; ?>" potvrdená</strong> <?php echo $chyba; 
 
- $_SESSION['user'] = 'admin';
- header('Location: prihlasenie.php');?>
+            $_SESSION['user'] = $names[$uzivatelS];
+            header('Location: prihlasenie.php');?>
 
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-<?php
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <?php
         } 
         else if (!$prihlasenie[$_POST['email-address']])
         {

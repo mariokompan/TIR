@@ -10,7 +10,7 @@ date_default_timezone_get("Europe/Bratislava");
     <div class="card" style="width:300px">
         <img class="card-img-top" src="images/user-image.png" alt="Card image" style="width:100%; padding: 3%">
         <div class="card-body">
-        <h3 class="card-title" style="text-align: center">Admin</h3>
+        <h3 class="card-title" style="text-align: center"><?php echo $_SESSION['user'];?></h3>
 
         <div class="container">
             <ul style="list-style-type:none; text-decoration: none">
@@ -25,7 +25,7 @@ date_default_timezone_get("Europe/Bratislava");
     </div>
         <form method="post">
             <input type="submit" value="Odhlásiť sa" name="signOut" style="margin-right:auto; margin-left:auto;
-            display:block">
+            display:block; margin-bottom:5%">
         </form>
     </div>
 
