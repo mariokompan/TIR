@@ -5,7 +5,7 @@ date_default_timezone_get("Europe/Bratislava");
 
     session_start();
 ?>
-
+<!--Left-orientated container-->
     <div class="container-fluid" style="padding: 1%">
     <div class="card" style="width:300px">
         <img class="card-img-top" src="images/user-image.png" alt="Card image" style="width:100%; padding: 3%">
