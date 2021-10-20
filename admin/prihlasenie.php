@@ -5,11 +5,6 @@ date_default_timezone_get("Europe/Bratislava");
 
     session_start();
 ?>
-<<<<<<< HEAD
-<form method="post">
-    <input type="submit" value="Odhlásiť sa" name="signOut">
-</form>
-=======
 
     <div class="container-fluid" style="padding: 1%">
     <div class="card" style="width:300px">
@@ -34,7 +29,6 @@ date_default_timezone_get("Europe/Bratislava");
         </form>
     </div>
 
->>>>>>> 1e4217c (Pridana stranka pre admina)
 <?php
 if(!(isset($_SESSION["user"]))){
     header('Location: index.php');
