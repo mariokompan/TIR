@@ -11,6 +11,7 @@ date_default_timezone_get("Europe/Bratislava");
         <img class="card-img-top" src="images/user-image.png" alt="Card image" style="width:100%; padding: 3%">
         <div class="card-body">
         <h3 class="card-title" style="text-align: center"><?php echo $_SESSION['user'];?></h3>
+        <h5 class="card-title" style="text-align: center"><?php echo $_SESSION['role'];?></h5>
 
         <div class="container">
             <ul style="list-style-type:none; text-decoration: none">
@@ -37,6 +38,7 @@ if(isset($_POST["signOut"]))
 {
     unset($_SESSION["user"]);
     unset($_SESSION["check"]);
+    unset($_SESSION["role"]);
     header('Location: index.php');
 }
 ?>
