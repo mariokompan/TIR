@@ -13,6 +13,7 @@ date_default_timezone_get("Europe/Bratislava");
     }
     else{
     }
+    unset($_SESSION["check"]);
 ?>          
 
 <?php 
