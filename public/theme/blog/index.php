@@ -10,12 +10,12 @@ date_default_timezone_get("Europe/Bratislava");
 
 <?php 
 
-
-
 $servername = "localhost";
 $username = "admin";
 $password = "vertrigoadmin";
 $dbname = "adminverification";
+
+$num = 0;
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -26,6 +26,7 @@ if ($conn->connect_error) {
 }
 
 $sql = "SELECT * FROM prispevky";
+
 $result = $conn->query($sql);
 
 $chyba ="";
@@ -35,20 +36,18 @@ $sprava ="";
 
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
-
 if(kontrola($_POST['odpoved']) == $_POST['spravna_odpoved']){
 
-$suborPrispevky = fopen('prispevky.csv', 'a');
 
-$novyPrispevok = array();
-$novyPrispevok[] = $_POST['pocet'] + 1;	
-$novyPrispevok[] = kontrola($_POST['meno']);
-$novyPrispevok[] = kontrola($_POST['sprava']);
-$novyPrispevok[] = date('Y-m-d H:i:s',time());
-header("Location: index.php");
-
-fputcsv($suborPrispevky, $novyPrispevok, ';');
-fclose($suborPrispevky);
+	$sql = "INSERT INTO prispevky (meno, prispevok, cas)
+	VALUES ('". kontrola($_POST['meno']) ."','". kontrola($_POST['sprava']) ."','". date('Y-m-d H:i:s',time()) ."')";
+		
+	if ($conn->query($sql) === TRUE) {
+		echo "New record created successfully";
+	} else {
+		echo "Error: " . $sql . "<br>" . $conn->error;
+	}
+	header("Location: index.php");
 }
 else
 {
@@ -57,7 +56,7 @@ else
  $sprava = kontrola($_POST['sprava']);
 }
 
-
+$sql = "SELECT * FROM prispevky";
 
  ?>
 
@@ -112,7 +111,6 @@ if(empty($chyba)){
 	$mena = [];
 	$prispevky = [];
 	$casy = [];
-
 	if ($result->num_rows > 0) {
 		while($row = $result->fetch_assoc()) {
 			$mena[] = $row["meno"];
