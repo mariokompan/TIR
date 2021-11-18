@@ -10,10 +10,27 @@ date_default_timezone_get("Europe/Bratislava");
 
 <?php 
 
+
+
+$servername = "localhost";
+$username = "admin";
+$password = "vertrigoadmin";
+$dbname = "adminverification";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
+
+$sql = "SELECT * FROM prispevky";
+$result = $conn->query($sql);
+
 $chyba ="";
 $meno = "";
 $sprava ="";
-
 /// odlišujeme prvy krat stranka spustena
 
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
@@ -31,7 +48,7 @@ $novyPrispevok[] = $_POST['pocet'] + 1;
 $novyPrispevok[] = kontrola($_POST['meno']);
 $novyPrispevok[] = kontrola($_POST['sprava']);
 $novyPrispevok[] = date('Y-m-d H:i:s',time());
-
+header("Location: index.php");
 
 fputcsv($suborPrispevky, $novyPrispevok, ';');
 fclose($suborPrispevky);
@@ -94,18 +111,21 @@ if(empty($chyba)){
 
 
 	$vybranyKluc = array_rand($antiSpam);
-	//echo $vybranyKluc;
 
+	$mena = [];
 	$prispevky = [];
-	$suborPrispevky = fopen('prispevky.csv', 'r');
+	$casy = [];
 
-	while($prispevok = fgetcsv($suborPrispevky,1000,';')){
-		$prispevky[] = $prispevok;
-	}
-
-	fclose($suborPrispevky);
-
-	$prispevky = array_reverse($prispevky);
+	if ($result->num_rows > 0) {
+		while($row = $result->fetch_assoc()) {
+			$mena[] = $row["meno"];
+			$prispevky[] = $row["prispevok"];
+			$casy[] = $row["cas"];
+		}
+	  } else {
+		echo "0 results";
+	  }
+	  $conn->close();
  ?>
 
 
@@ -161,15 +181,15 @@ if(empty($chyba)){
 	<hr class="border-dark"> 
 	<div class="container">
 		<?php 
-			foreach ($prispevky as $prispevok) {
-				$datum = strtotime($prispevok[3]);
+			for ($i = 0; $i < count($prispevky); $i++) {
+				$datum = strtotime($casy[$i]);
 				$datumTxt = date('j. ', $datum) .$mesiace[date('n', $datum) - 1]. date(' Y H:i', $datum); 
 			
 		 ?>	
-			<h4><?php echo $prispevok[1] ?></h4>
+			<h4><?php echo $mena[$i]?></h4>
 			<small><i> Odoslane: <?php echo $datumTxt ?></i></small>
 			<p>
-				<?php echo prelozBBCode(nl2br($prispevok[2])) ?>
+				<?php echo prelozBBCode(nl2br($prispevky[$i])) ?>
 			</p>
 			<hr>
 		<?php 

@@ -4,6 +4,10 @@ date_default_timezone_get("Europe/Bratislava");
 	include'js/navbar.php';
 
     session_start();
+
+    if(!(isset($_SESSION["user"]))){
+        header('Location: index.php');
+    }
 ?>
 <!--Left-orientated container-->
     <div class="container-fluid" style="padding: 1%">
@@ -11,6 +15,7 @@ date_default_timezone_get("Europe/Bratislava");
         <img class="card-img-top" src="images/user-image.png" alt="Card image" style="width:100%; padding: 3%">
         <div class="card-body">
         <h3 class="card-title" style="text-align: center"><?php echo $_SESSION['user'];?></h3>
+        <h5 class="card-title" style="text-align: center"><?php echo $_SESSION['role'];?></h5>
 
         <div class="container">
             <ul style="list-style-type:none; text-decoration: none">
@@ -30,13 +35,11 @@ date_default_timezone_get("Europe/Bratislava");
     </div>
 
 <?php
-if(!(isset($_SESSION["user"]))){
-    header('Location: index.php');
-}
 if(isset($_POST["signOut"]))
 {
     unset($_SESSION["user"]);
     unset($_SESSION["check"]);
+    unset($_SESSION["role"]);
     header('Location: index.php');
 }
 ?>

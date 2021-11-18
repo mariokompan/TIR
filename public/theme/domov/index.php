@@ -11,7 +11,6 @@
 		list($nadpis,$obrazok,$text) = explode('::', $clanok);
 		?>
 	<h3><?php echo $nadpis ?></h3>
- 	<img src="images/<?php echo $obrazok ?>" alt="">
  	<img src="<?php echo 'images/'.$obrazok ?>" alt="">
  	<p><?php echo $text ?></p> <br>
  	<?php
@@ -22,6 +21,6 @@
  </section>
 
  <?php 
- 	include '../../../assets/pata.php'
+ 	include '../../assets/pata.php';
   ?>
 

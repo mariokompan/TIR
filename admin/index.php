@@ -6,67 +6,91 @@ date_default_timezone_get("Europe/Bratislava");
     session_start();
     if(!(isset($_SESSION['check']))){
         unset($_SESSION["user"]);
+        unset($_SESSION["role"]);
     }
     if(isset($_SESSION['user'])){
         header('Location: prihlasenie.php');
     }
     else{
     }
-?>
+    unset($_SESSION["check"]);
+
+?>          
 
 <?php 
-$chyba ="";
-
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
-
-     $uzivatelia = file('uzivatelia.csv', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-     $prihlasenie = [];
-     $names = [];
-
-        foreach ($uzivatelia as $uzivatel) {
-            list($k,$h,$z) = explode('::', $uzivatel);
-            $prihlasenie[$k] = $h;
-            $names[$k] = $z;
-                   }
 	$uzivatelS = $_POST['email-address'];
-        if($_POST['password'] === $prihlasenie[$_POST['email-address']])
-        {
-        ?>
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>Identita "<?php echo $uzivatelS; ?>" potvrdená</strong> <?php echo $chyba; 
 
-            $_SESSION['user'] = $names[$uzivatelS];
-            header('Location: prihlasenie.php');?>
+            $servername = "localhost";
+            $username = "admin";
+            $password = "vertrigoadmin";
+            $dbname = "adminverification";
+            $loginState = false;
+            
+            $conn = new mysqli($servername, $username, $password, $dbname);
 
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <?php
-        } 
-        else if (!$prihlasenie[$_POST['email-address']])
-        {
-            ?>
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
 
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-			 <strong>Užívateľ "<?php echo $uzivatelS; ?>" neexistuje</strong> <?php echo $chyba; ?>
-			  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-			    <span aria-hidden="true">&times;</span>
-			  </button>
-			</div>
+            $sql = "SELECT id, login, heslo, meno, rola FROM uzivatelia";
+            $result = $conn->query($sql);
 
-            <?php
-        }
-        else {
-?>
-<div class="alert alert-danger alert-dismissible fade show" role="alert">
- <strong>Chyba autorizácie uživateľa "<?php echo $uzivatelS; ?>"</strong> <?php echo $chyba; ?>
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-<?php
-        }
+            if ($result->num_rows > 0) {
+                while($row = $result->fetch_assoc()) {
+                        if ($_POST["email-address"] == $row["login"]){
+                            $loginState = true;
+                            if (md5($_POST["password"]) == $row["heslo"]){
+                                $_SESSION['user'] = $row["meno"];
+                                $_SESSION['role'] = $row["rola"];
+                                header('Location: prihlasenie.php');
+                                ?>
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <strong>Identita "<?php echo $uzivatelS; ?>" potvrdená</strong> 
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        <?php
+                            break;
+                            }
+                            else
+                            {
+                                ?>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <strong>Nesprávne meno alebo heslo!</strong>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                <?php
+                            break;
+                            }
+                        }
+                }
+                if ($loginState != true){
+                    ?>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <strong>Uživateľ "<?php echo $uzivatelS; ?>" neexistuje.</strong>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                <?php
+                }
+
+            } 
+            else {
+                ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Žiadny záznam v databáze!</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                <?php
+            }
+            $conn->close();
     }
  ?>
 
