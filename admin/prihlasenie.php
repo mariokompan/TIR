@@ -42,4 +42,8 @@ if(isset($_POST["signOut"]))
     unset($_SESSION["role"]);
     header('Location: index.php');
 }
+<<<<<<< HEAD
 ?>
+=======
+?> 
+>>>>>>> 610c7951e4b1bef79977add774c22970e857b2e5

@@ -36,14 +36,11 @@ $sprava ="";
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 
-
 if(kontrola($_POST['odpoved']) == $_POST['spravna_odpoved']){
 
 $suborPrispevky = fopen('prispevky.csv', 'a');
 
 $novyPrispevok = array();
-
-
 $novyPrispevok[] = $_POST['pocet'] + 1;	
 $novyPrispevok[] = kontrola($_POST['meno']);
 $novyPrispevok[] = kontrola($_POST['sprava']);
