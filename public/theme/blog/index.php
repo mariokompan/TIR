@@ -25,7 +25,7 @@ if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT * FROM prispevky";
+$sql = "SELECT * FROM prispevky order by id DESC";
 
 $result = $conn->query($sql);
 
